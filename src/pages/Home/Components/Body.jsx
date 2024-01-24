@@ -1,9 +1,12 @@
 import React from "react";
 import { useAxios } from "../../../hooks/useAxios";
+import { useDispatch } from "react-redux";
+import { addOrder } from "../../../store/orderSlice";
 
-const Body = ({searchValue}) => {
+const Body = ({ searchValue }) => {
+  const dispatch = useDispatch();
   const [activeIndex, setActiveIndex] = React.useState(0);
-  const [selectValue, setSelectValue] = React.useState("desc");
+  const [selectValue, setSelectValue] = React.useState("asc");
   const [toggle, setToggle] = React.useState(false);
   const handleButtonClick = (index) => {
     setActiveIndex(index);
@@ -14,10 +17,18 @@ const Body = ({searchValue}) => {
     method: "get",
   });
   const { data } = useAxios({
-    url: `/food?filters[category_id]=${activeIndex + 1}&sort[by]=price&sort[order]=${selectValue}${searchValue ? "&q=" + searchValue : ""}`,
+    url: `/food?filters[category_id]=${
+      activeIndex + 1
+    }&sort[by]=price&sort[order]=${selectValue}${
+      searchValue ? "&q=" + searchValue : ""
+    }`,
     method: "get",
   });
   if (loading) return <p>Loading...</p>;
+
+  const onClick = (item) => {
+    dispatch(addOrder(item))
+  };
 
   return (
     <div className="pt-6">
@@ -29,8 +40,8 @@ const Body = ({searchValue}) => {
                 key={item.id}
                 className={
                   index === activeIndex
-                    ? "text-orange text-md font-semibold text-center relative"
-                    : "text-md font-semibold"
+                    ? "text-orange text-md font-semibold text-center relative cursor-pointer"
+                    : "text-md font-semibold cursor-pointer"
                 }
                 onClick={() => handleButtonClick(index)}
               >
@@ -53,7 +64,7 @@ const Body = ({searchValue}) => {
             }`}
           ></i>
           <select
-          onChange={(e) => setSelectValue(e.target.value)}
+            onChange={(e) => setSelectValue(e.target.value)}
             onClick={() => setToggle(!toggle)}
             className="w-full h-full outline-none border border-zinc-600 bg-baseDark rounded-lg text-sm font-medium  pl-4 appearance-none"
           >
@@ -62,12 +73,16 @@ const Body = ({searchValue}) => {
           </select>
         </div>
       </div>
-      <ul style={{height: "70vh"}} className="flex flex-wrap gap-14 pt-10 overflow-auto ">
+      <ul
+        style={{ height: "70vh" }}
+        className="flex flex-wrap gap-14 pt-10 overflow-auto "
+      >
         {data.data?.list.map((item) => {
           return (
             <li
+              onClick={() => onClick(item)}
               key={item.id}
-              className="w-48 h-56 flex flex-col items-center text-center bg-dark rounded-2xl relative "
+              className="w-48 h-56 flex flex-col items-center text-center bg-dark rounded-2xl relative cursor-pointer"
             >
               <img
                 style={{ width: "135px", height: "135px", borderRadius: "50%" }}

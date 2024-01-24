@@ -9,11 +9,11 @@ const Header = ({setSearchValue}) => {
           {new Date().toDateString()}
         </p>
       </div>
-      <div className="w-56 h-12 relative">
+      <div className="w-60 h-12 relative">
         <i className="fa-solid fa-magnifying-glass absolute top-1/2 -translate-y-1/2 left-3"></i>
         <input
           onChange={(e) => setSearchValue(e.target.value)}
-          placeholder="Search for food, coffe, etc.."
+          placeholder="Search for food, coffe, etc..."
           style={{ background: "#2D303E" }}
           className="pl-9 w-full h-full rounded-lg
             border border-zinc-600 focus:border-white outline-none"
